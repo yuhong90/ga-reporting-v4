@@ -59,15 +59,13 @@ async function getPopularSearchesLast30Days(): Promise<Schema$Report[]> {
                 startDate: '30daysAgo',
                 endDate: 'yesterday'
             }],
-            dimensions: [{ name: 'ga:pagePath' }],
+            dimensions: [{ name: 'ga:searchKeyword' }],
             metrics: [
-                { expression: 'ga:users' },
-                { expression: 'ga:sessions' },
-                { expression: 'ga:pageviews' },
-                { expression: 'ga:uniquePageviews' },
-                { expression: 'ga:avgTimeOnPage' }
+                { expression: 'ga:searchResultViews' },
+                { expression: 'ga:searchUniques' },
+                { expression: 'ga:avgSearchDepth' }
             ],
-            orderBys: [{ fieldName: 'ga:users', sortOrder: 'DESCENDING' }]
+            orderBys: [{ fieldName: 'ga:searchResultViews', sortOrder: 'DESCENDING' }]
         }
     );
     return result.data.reports ? result.data.reports : [];
@@ -75,5 +73,6 @@ async function getPopularSearchesLast30Days(): Promise<Schema$Report[]> {
 
 export default {
     getPopularPagesLast30days,
-    getPopularPagesBreakdownBySourceLast30days
+    getPopularPagesBreakdownBySourceLast30days,
+    getPopularSearchesLast30Days
 }

@@ -20,6 +20,7 @@ export class UsageReportGenerator {
     static async start() {
         await UsageReportGenerator.generatePopularPagesReport();
         await UsageReportGenerator.generatePopularPagesBySourceReport();
+        await UsageReportGenerator.generatePopularSearchesReport();
     }
 
     static async generatePopularPagesReport() {
@@ -36,6 +37,14 @@ export class UsageReportGenerator {
         GAReportResultFormatter.printResults(popularPageResult);
         persistResultsToCSV(reportsString[0], './output/popular_pages_by_source.csv');
         return popularPageResult;
+    }
+
+    static async generatePopularSearchesReport() {
+        let popularSearchesResult = await GaQueries.getPopularSearchesLast30Days();
+        let reportsString = GAReportResultFormatter.retrieveReportDataInCSVString(popularSearchesResult);
+        GAReportResultFormatter.printResults(popularSearchesResult);
+        persistResultsToCSV(reportsString[0], './output/popular_searches.csv');
+        return popularSearchesResult;
     }
 }
 
