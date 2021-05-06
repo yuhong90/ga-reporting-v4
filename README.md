@@ -3,8 +3,8 @@ This repo uses [GA Reporting APIs v4](https://developers.google.com/analytics/de
 
 
 ## Examples of queries:
-- Retrieves most visited pages for the week in past 30 days
-- Retrieves most visited pages for the week in past 30 days
+- Retrieves most visited pages for past 30 days
+- Retrieves most visited pages, breakdown by source for past 30 days
 - Retrieves most searched terms within site (WIP)
 - Retrieves most frequent referred search terms (WIP)
 
