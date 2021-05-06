@@ -1,0 +1,9 @@
+node_modules
+
+# secrets / env vars
+keys
+.env
+
+# generated build/output dir
+output
+build
