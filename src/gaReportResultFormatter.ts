@@ -1,10 +1,6 @@
-import { analyticsreporting_v4 } from 'googleapis';
+import { Schema$Report, Schema$ColumnHeader, Schema$ReportData } from './types';
 import { SortedQueryResults, QueryResultHeader, QueryResultData } from './types';
 
-type Schema$Report = analyticsreporting_v4.Schema$Report;
-type Schema$ColumnHeader = analyticsreporting_v4.Schema$ColumnHeader;
-type Schema$MetricHeader = analyticsreporting_v4.Schema$MetricHeader;
-type Schema$ReportData = analyticsreporting_v4.Schema$ReportData;
 
 export default class GAReportResultFormatter {
 
@@ -32,22 +28,23 @@ export default class GAReportResultFormatter {
         return headers;
     }
 
-    static extractMetricData(metricData: Schema$ReportData | undefined): QueryResultData {
+    static extractMetricData(metricData: Schema$ReportData | undefined): QueryResultData[] {
         if (!metricData || !metricData.rows) {
-            return {};
+            return [];
         }
 
-        let data: QueryResultData = {};
+        let data: QueryResultData[] = [];
         metricData.rows.forEach(row => {
+            // console.log(row);
+            if (!row.dimensions) {
+                return;
+            }
             let metricValueArr: string[] = [];
             if (row.metrics && row.metrics[0]) {
                 metricValueArr = row.metrics[0].values ? row.metrics[0].values : [];
             }
-
-            if (row.dimensions && row.dimensions[0]) {
-                let pagePath = row.dimensions[0];
-                data[pagePath] = metricValueArr;
-            }
+            let record: QueryResultData = { dimensions: row.dimensions, metrics: metricValueArr };
+            data.push(record);
         });
         return data;
     }
@@ -58,11 +55,12 @@ export default class GAReportResultFormatter {
         }
 
         reports.forEach(report => {
-            let pageMetrics: SortedQueryResults = { queryResultHeaders: { dimensions: [], metrics: [] }, queryResultData: {} };
+            let pageMetrics: SortedQueryResults = { queryResultHeaders: { dimensions: [], metrics: [] }, queryResultData: [] };
 
             pageMetrics.queryResultHeaders = GAReportResultFormatter.extractMetricHeaders(report.columnHeader);
             pageMetrics.queryResultData = GAReportResultFormatter.extractMetricData(report.data);
-            console.log(pageMetrics);
+            console.log(pageMetrics.queryResultHeaders);
+            console.log(pageMetrics.queryResultData);
         });
     }
 
@@ -100,11 +98,9 @@ export default class GAReportResultFormatter {
 
         let reportOutputArr: string[] = [];
         reports.forEach(report => {
-            let pageMetrics: SortedQueryResults = { queryResultHeaders: { dimensions: [], metrics: [] }, queryResultData: {} };
-
-            pageMetrics.queryResultHeaders = GAReportResultFormatter.extractMetricHeaders(report.columnHeader);
-            const headers = [...pageMetrics.queryResultHeaders.dimensions, ...pageMetrics.queryResultHeaders.metrics];
-            const headerString = headers.join(',');
+            let queryResultHeaders = GAReportResultFormatter.extractMetricHeaders(report.columnHeader);
+            const headers = [...queryResultHeaders.dimensions, ...queryResultHeaders.metrics];
+            const headerString = headers.join(', ');
             const dataString = GAReportResultFormatter.extractReportDataForCSV(report.data);
             const outputString = headerString + '\n' + dataString;
 

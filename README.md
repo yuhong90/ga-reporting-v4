@@ -1,8 +1,8 @@
-# GAReportingV4 - Common Queries
-This repo uses [GA Reporting APIs v4](https://developers.google.com/analytics/devguides/reporting/core/v4) to query common basic analytics use cases on reporting website usage. Queried results are outputed as CSV files.
+# GAReportingV4 - Queries Samples
+This repo serves as sample to use [GA Reporting APIs v4](https://developers.google.com/analytics/devguides/reporting/core/v4) to query common basic analytics use cases on reporting website usage. Queried results are outputed as CSV files.
 
 
-## Examples of queries:
+## Examples of queries used:
 - Retrieves most visited pages for past 30 days
 - Retrieves most visited pages, breakdown by source for past 30 days
 - Retrieves most popular searched terms within site for past 30 days (WIP)
@@ -21,4 +21,4 @@ Under `GA's Settings > Account User Management > Property User Management > `
 ## Running the script
 - `npm install` - Restore dependencies
 - `npm run setup` - Setup dir structure
-- `npm run start` - Run script and write results as CSV to `./output` dir
+- `npm run start` - Run reporting script and write results as CSV to `./output` dir
